@@ -662,41 +662,40 @@
 
 <script>
     // ---- Theme switching & Favicon Manager ----
-    const root = document.documentElement;
-    const toggleBtn = document.getElementById('theme-toggle');
-    const knobIcon = document.getElementById('knob-icon');
-    
-    // Select or create the favicon element inside <head>
-    let faviconElement = document.getElementById('favicon');
-    if (!faviconElement) {
-      faviconElement = document.querySelector("link[rel*='icon']");
-      if (faviconElement) faviconElement.id = 'favicon';
+const root = document.documentElement;
+const toggleBtn = document.getElementById('theme-toggle');
+const knobIcon = document.getElementById('knob-icon');
+
+// Select or create the favicon element inside <head>
+let faviconElement = document.getElementById('favicon');
+if (!faviconElement) {
+  faviconElement = document.querySelector("link[rel*='icon']");
+  if (faviconElement) faviconElement.id = 'favicon';
+}
+
+const SUN_PATH = '<path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/><circle cx="12" cy="12" r="4"/>';
+const MOON_PATH = '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>';
+
+function setTheme(theme) {
+  root.setAttribute('data-theme', theme);
+  const isDark = theme === 'dark';
+  toggleBtn.setAttribute('aria-checked', isDark);
+  toggleBtn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+  knobIcon.innerHTML = isDark ? MOON_PATH : SUN_PATH;
+  
+  // Update Favicon using your exact new .ico filenames
+  if (faviconElement) {
+    if (isDark) {
+      faviconElement.setAttribute('type', 'image/x-icon');
+      faviconElement.setAttribute('href', 'Dark_resized.ico');
+    } else {
+      faviconElement.setAttribute('type', 'image/x-icon');
+      faviconElement.setAttribute('href', 'Light_resized.ico');
     }
+  }
 
-    const SUN_PATH = '<path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/><circle cx="12" cy="12" r="4"/>';
-    const MOON_PATH = '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>';
-
-    function setTheme(theme) {
-      root.setAttribute('data-theme', theme);
-      const isDark = theme === 'dark';
-      toggleBtn.setAttribute('aria-checked', isDark);
-      toggleBtn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-      knobIcon.innerHTML = isDark ? MOON_PATH : SUN_PATH;
-      
-      // Update Favicon based on theme layout requirements
-      if (faviconElement) {
-        if (isDark) {
-          // Dark UI theme gets the bright/light favicon layout to contrast against dark browser tabs
-        
-                  faviconElement.setAttribute('href', 'Dark_resized.ico');
-        } else {
-          // Light UI theme gets the dark favicon layout to show up clearly on light browser tabs
-          faviconElement.setAttribute('href', 'Light_resized.ico');
-        }
-      }
-
-      try { localStorage.setItem('momen-theme', theme); } catch (e) {}
-    }
+  try { localStorage.setItem('momen-theme', theme); } catch (e) {}
+}
     
     toggleBtn.addEventListener('click', () => {
       const current = root.getAttribute('data-theme');
